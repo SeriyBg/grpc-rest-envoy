@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+
+package grpcrest.envoy.demo.proto;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+
+message Greeting {
+    string hello = 1;
+}
+
+service GreetingService {
+    rpc greet(Greeting) returns (google.protobuf.Empty) {
+        option(google.api.http).get = "/hello";
+    }
+}
