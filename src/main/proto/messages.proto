@@ -8,7 +8,6 @@ import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
-
 message Greeting {
     string hello = 1;
 }
