@@ -12,8 +12,17 @@ message Greeting {
     string hello = 1;
 }
 
+message GreetingResponse {
+    string hello = 1;
+    string name = 2;
+}
+
 service GreetingService {
-    rpc greet(Greeting) returns (google.protobuf.Empty) {
+    rpc Greet(Greeting) returns (google.protobuf.Empty) {
         option(google.api.http).get = "/hello";
+    }
+
+    rpc GreetResponse(Greeting) returns (GreetingResponse) {
+        option(google.api.http).get = "/hello/{hello}";
     }
 }
