@@ -30,9 +30,9 @@ static_resources:
                     typed_config:
                       "@type": type.googleapis.com/envoy.config.filter.http.transcoder.v2.GrpcJsonTranscoder
                       proto_descriptor: "/Users/sbishhyr/IdeaProjects/grpc-rest-envoy/proto.pb"
-                      services: ["grpcrest.envoy.demo.proto.GreetingService"]
-                      match_incoming_request_route: "true"
-                      convert_grpc_status: "true"
+                      services: ["grpcrest.envoy.demo.proto.SongService", "grpcrest.envoy.demo.proto.GreetingService"]
+                      match_incoming_request_route: true
+#                      convert_grpc_status: true
                       print_options:
                         add_whitespace: true
                         always_print_primitive_fields: true

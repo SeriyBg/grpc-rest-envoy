@@ -8,6 +8,7 @@ import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/rpc/status.proto";
+import "google/protobuf/any.proto";
 
 message Greeting {
     string hello = 1;
@@ -16,6 +17,32 @@ message Greeting {
 message GreetingResponse {
     string hello = 1;
     string name = 2;
+    google.protobuf.Timestamp timestamp = 3;
+}
+
+message SongRequest {
+    string name = 1;
+    string album = 2;
+}
+
+message Song {
+    string name = 1;
+    string album = 2;
+    google.protobuf.Timestamp creation_timestamp = 3;
+}
+
+message Songs {
+    repeated Song songs = 1;
+}
+
+service SongService {
+    rpc FindSongs(SongRequest) returns (Songs) {
+        option(google.api.http).get = "/song";
+    }
+
+    rpc CreateSong(Song) returns (google.protobuf.Empty) {
+        option(google.api.http).post = "/song";
+    }
 }
 
 service GreetingService {
@@ -24,6 +51,12 @@ service GreetingService {
     }
 
     rpc GreetResponse(Greeting) returns (GreetingResponse) {
-        option(google.api.http).get = "/hello/{hello}";
+        option(google.api.http) = {
+            get: "/hello/{hello}"
+            additional_bindings {
+                post: "/hello"
+                body: "hello"
+            }
+        };
     }
 }
