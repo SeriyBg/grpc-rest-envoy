@@ -7,8 +7,6 @@ package grpcrest.envoy.demo.proto;
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
-import "google/rpc/status.proto";
-import "google/protobuf/any.proto";
 
 message Greeting {
     string hello = 1;
@@ -20,41 +18,72 @@ message GreetingResponse {
     google.protobuf.Timestamp timestamp = 3;
 }
 
-message SongRequest {
+message SongNotFoundError {
     string name = 1;
-    string album = 2;
 }
 
-message Song {
+message SongRequest {
     string name = 1;
-    string album = 2;
-    google.protobuf.Timestamp creation_timestamp = 3;
 }
 
 message Songs {
     repeated Song songs = 1;
 }
 
+message SongLine {
+    string line = 1;
+}
+
+message Song {
+    string name = 1;
+    string album = 2;
+    google.protobuf.Timestamp created_at = 3;
+    LegacySong legacySong = 4 [deprecated = true];
+}
+
+message LegacySong {
+    string song_name = 1;
+    string song_album = 2;
+}
+
 service SongService {
-    rpc FindSongs(SongRequest) returns (Songs) {
-        option(google.api.http).get = "/song";
+    rpc FindSong(SongRequest) returns (Songs) {
+        option (google.api.http).get = "/song";
     }
 
-    rpc CreateSong(Song) returns (google.protobuf.Empty) {
-        option(google.api.http).post = "/song";
+    rpc CreateSong(Song) returns (Song) {
+        option (google.api.http) = {
+            post: "/song"
+            additional_bindings {
+                post: "/createSong"
+                body: "legacySong"
+            }
+        };
+    }
+
+    rpc SongLyrics(SongRequest) returns (stream SongLine) {
+        option (google.api.http).get = "/song/{name}/lyrics";
+    }
+
+    rpc BuySongs(stream SongRequest) returns (Songs) {
+        option (google.api.http).post = "/song/buy";
     }
 }
 
 service GreetingService {
-    rpc Greet(Greeting) returns (google.protobuf.Empty) {
-        option(google.api.http).get = "/hello";
+    rpc Greet (Greeting) returns (google.protobuf.Empty) {
+        option (google.api.http).get = "/hello";
     }
 
-    rpc GreetResponse(Greeting) returns (GreetingResponse) {
-        option(google.api.http) = {
+    rpc GreetResponse (Greeting) returns (GreetingResponse) {
+        option (google.api.http) = {
             get: "/hello/{hello}"
             additional_bindings {
                 post: "/hello"
+                body: "hello"
+            }
+            additional_bindings {
+                post: "/hello2"
                 body: "hello"
             }
         };

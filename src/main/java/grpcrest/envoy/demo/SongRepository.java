@@ -3,7 +3,9 @@ package grpcrest.envoy.demo;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +25,25 @@ public class SongRepository {
             Song.of("Spread Your Wings", "News of the World", LocalDate.of(1978, 2, 10))
     );
 
+    private static final Map<String, String> SONG_LYRICS = Map.of(
+            "Bohemian Rhapsody", "Mama, just killed a man\n" +
+                    "Put a gun against his head\n" +
+                    "Pulled my trigger, now he's dead\n" +
+                    "Mama, life had just begun\n" +
+                    "But now I've gone and thrown it all away\n" +
+                    "Mama, ooh\n" +
+                    "Didn't mean to make you cry\n" +
+                    "If I'm not back again this time tomorrow\n" +
+                    "Carry on, carry on\n" +
+                    "As if nothing really matters\n",
+            "Love of My Life", "Love of my life, you've hurt me\n" +
+                    "You've broken my heart and now you leave me\n" +
+                    "Love of my life, can't you see?\n" +
+                    "Bring it back, bring it back\n" +
+                    "Don't take it away from me, because you don't know\n" +
+                    "What it means to me\n"
+    );
+
     Collection<Song> findAll() {
         return ALL_SONGS;
     }
@@ -33,6 +54,10 @@ public class SongRepository {
 
     Collection<Song> findByAlbum(String album) {
         return ALL_SONGS.stream().filter(song -> song.getAlbum().equals(album)).collect(Collectors.toList());
+    }
+
+    Stream<String> findLyrics(String songName) {
+        return SONG_LYRICS.getOrDefault(songName, "").lines();
     }
 
     void createNewSong(String name, String album) {

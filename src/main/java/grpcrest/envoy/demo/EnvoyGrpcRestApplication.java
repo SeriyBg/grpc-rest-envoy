@@ -9,5 +9,4 @@ public class EnvoyGrpcRestApplication {
     public static void main(String[] args) {
         SpringApplication.run(EnvoyGrpcRestApplication.class, args);
     }
-
 }

@@ -2,10 +2,12 @@ package grpcrest.envoy.demo;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
+@Builder
 public class Song {
     private final String name;
     private final String album;
